@@ -3,13 +3,13 @@ import { gapi } from 'gapi-script';
 
 const CLIENT_ID = '363808482416-dm5spios3gtrrtfvms5ru5vl3k1q3ugr.apps.googleusercontent.com';
 const API_KEY = 'AIzaSyBUKMgUc9zS9CEPi6p4cHmG7ZDoR6T7PWQ';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/drive';
 
 const GoogleSheetsIntegration = ({ setWords, spreadsheetId }) => {
     const handleLogin = () => {
         gapi.load('client:auth2', () => {
             gapi.client.init({
-                developerKey: API_KEY,
+                apiKey: API_KEY,
                 clientId: CLIENT_ID,
                 //discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
                 scope: SCOPES
