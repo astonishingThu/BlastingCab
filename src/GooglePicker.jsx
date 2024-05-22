@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { gapi } from 'gapi-script';
 
 const CLIENT_ID = '363808482416-dm5spios3gtrrtfvms5ru5vl3k1q3ugr.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyBUKMgUc9zS9CEPi6p4cHmG7ZDoR6T7PWQ';
+const API_KEY = 'AIzaSyDWhU0n8lAt1SJSI4xIuXAi6I9zprc9rWI';
 
 const GooglePicker = ({ setSpreadsheetId }) => {
     useEffect(() => {
