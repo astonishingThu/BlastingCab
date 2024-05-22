@@ -9,9 +9,9 @@ const GoogleSheetsIntegration = ({ setWords, spreadsheetId }) => {
     const handleLogin = () => {
         gapi.load('client:auth2', () => {
             gapi.client.init({
-                apiKey: API_KEY,
+                developerKey: API_KEY,
                 clientId: CLIENT_ID,
-                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                //discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
                 scope: SCOPES
             }).then(() => {
                 gapi.auth2.getAuthInstance().signIn().then(() => {

@@ -10,10 +10,13 @@ const GooglePicker = ({ setSpreadsheetId }) => {
         const initClient = () => {
             gapi.load('client:auth2', () => {
                 gapi.client.init({
-                    apiKey: API_KEY,
+                    developerKey: API_KEY,
                     clientId: CLIENT_ID,
                     scope: 'https://www.googleapis.com/auth/drive.readonly',
-                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+                    //discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+                    showUploadView: true,
+                    showUploadFolders: true,
+                    supportDrives: true
                 });
             });
         };
