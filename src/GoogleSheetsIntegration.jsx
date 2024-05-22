@@ -12,7 +12,7 @@ const GoogleSheetsIntegration = ({ setWords, spreadsheetId }) => {
                 apiKey: API_KEY,
                 clientId: CLIENT_ID,
                 discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-
+                scope: SCOPES
             }).then(() => {
                 gapi.auth2.getAuthInstance().signIn().then(() => {
                     if (spreadsheetId) {

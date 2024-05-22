@@ -128,9 +128,6 @@ function App() {
                             <Link to="/"><strong>SETTINGS</strong></Link>
                         </li>
                         <li>
-                            <GoogleSheetsIntegration setWords={setWords}/>
-                        </li>
-                        <li>
                             <GooglePicker setSpreadsheetId={setSpreadsheetId}/>
                         </li>
                         <li>
