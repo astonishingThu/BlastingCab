@@ -1,0 +1,66 @@
+/* src/components/ModeSelection.css */
+.mode-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ffffff;
+}
+
+.mode-selection h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+}
+
+.mode-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.mode-button {
+    background-color: #000000;
+    border: none;
+    border-radius: 10px;
+    padding: 1rem;
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.mode-button img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.mode-button h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.mode-button p {
+    font-size: 1rem;
+    color: #adadad;
+}
+
+.mode-button.selected {
+    border: 1px solid #ededed;
+    transform: scale(1.05);
+}
+
+.confirm-button {
+    margin-top: 2rem;
+    padding: 0.75rem 2rem;
+    background-color: #ededed;
+    color: hsl(0, 0%, 3.9%);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.confirm-button:hover {
+    background-color: #adadad;
+}

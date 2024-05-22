@@ -1,0 +1,84 @@
+
+.word-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.word-display .begin,
+.word-display .end,
+.word-display .control {
+  flex: none; /* This prevents the items from growing/shrinking with content */
+  margin: 10px 0;
+}
+.word-display .control {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  margin: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.word-display .control .control-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 88%;
+}
+.timer > p {
+  font-size: 2rem;
+}
+.word-display h1 {
+  font-size: 6.4rem;
+  margin-bottom: 20px;
+}
+
+.word-display input {
+  padding: 10px;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.word-display button {
+  padding: 4px 12px;
+}
+
+.backCard>p {
+  white-space: nowrap;
+}
+.level-buttons {
+  display: flex;
+  flex-direction: row;
+}
+.level-buttons button {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin: 0.8em;
+  border: none;
+  border-radius: 4px;
+  background-color: #ededed;
+  color: hsl(0, 0%, 3.9%);
+  cursor: pointer;
+}
+.skipButton {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin: 0.8em;
+  border: none;
+  border-radius: 4px;
+  background-color: #ededed;
+  color: hsl(0, 0%, 3.9%);
+  cursor: pointer;
+}
+
+.skipButton:hover, .level-buttons > button:hover {
+  background-color: #adadad;
+}

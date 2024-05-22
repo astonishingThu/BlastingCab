@@ -1,0 +1,81 @@
+/* App.css */
+body {
+  background: #000000;
+  color: linear-gradient(180deg,#fff,#adadad);
+  font-weight: bolder;
+}
+
+.App {
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
+  min-height: 100vh;
+  text-align: center;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 2em 2em;
+  display: flex;
+  gap: 20px;
+  justify-content: left;
+}
+
+nav li {
+  display: inline;
+}
+
+nav a {
+  text-decoration: none;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+nav a:hover {
+  color: rgba(250, 236, 236, 0.71);
+}
+
+.settings,
+.word-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 80%; /* Adjust as needed */
+  margin: 0 auto; /* Center horizontally */
+}
+
+input[type="text"],
+textarea {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%; /* Fill the container */
+  max-width: 300px; /* Limit width */
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+p {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+h1 {
+  white-space: nowrap;
+  font-weight: bold;
+}
+#root {
+  width: 100%;
+}
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
