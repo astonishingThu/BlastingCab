@@ -6,12 +6,18 @@ import {firestore} from "./firebase";
 import {doc, getDoc} from "firebase/firestore";
 import "./App.css";
 import ModeSelection from "./ModeSelection.jsx";
+import GoogleSheetsIntegration from "./GoogleSheetsIntegration.jsx";
+import GooglePicker from "./GooglePicker.jsx";
+
+const YOUR_CLIENT_ID = 'your-client-id';
+const YOUR_API_KEY = 'your-api-key';
 
 function App() {
   const [words, setWords] = useState([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [interval, setInterval] = useState(3);
   const [mode, setMode] = useState('shuffled'); // Default mode
+    const [spreadsheetId, setSpreadsheetId] = useState('');
 
     const applyMode = (mode) => {
         console.log("Before sorting:", words);
@@ -65,6 +71,53 @@ function App() {
         setMode(selectedMode);
         applyMode(mode);
     };
+    const handleWordsImported = (importedWords) => {
+        setWords(importedWords);
+    };
+
+    useEffect(() => {
+        if (spreadsheetId) {
+            // Fetch data from the selected Google Sheet and update words state
+            gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId,
+                range: 'Sheet1!A1:D10',
+            }).then((response) => {
+                setWords(response.result.values.map(([word, definition, samples, level]) => ({
+                    word,
+                    definition,
+                    samples: samples.split(','), // Assuming samples are comma-separated in the sheet
+                    level: parseInt(level, 10),
+                })));
+            });
+        }
+    }, [spreadsheetId]);
+
+    const handleLogin = () => {
+        gapi.load('client:auth2', () => {
+            gapi.client.init({
+                apiKey: YOUR_API_KEY,
+                clientId: YOUR_CLIENT_ID,
+                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+            }).then(() => {
+                gapi.auth2.getAuthInstance().signIn().then(() => {
+                    gapi.client.sheets.spreadsheets.values.get({
+                        spreadsheetId: YOUR_SPREADSHEET_ID,
+                        range: 'Sheet1!A1:D10',
+                    }).then((response) => {
+                        console.log(response.result.values);
+                        // Update your state with the new data
+                        setWords(response.result.values.map(([word, definition, samples, level]) => ({
+                            word,
+                            definition,
+                            samples: samples.split(','), // Assuming samples are comma-separated in the sheet
+                            level: parseInt(level, 10),
+                        })));
+                    });
+                });
+            });
+        });
+    };
     return (
     <Router>
         <div className="container">
@@ -75,16 +128,19 @@ function App() {
                             <Link to="/"><strong>SETTINGS</strong></Link>
                         </li>
                         <li>
+                            <GoogleSheetsIntegration setWords={setWords}/>
+                        </li>
+                        <li>
+                            <GooglePicker setSpreadsheetId={setSpreadsheetId}/>
+                        </li>
+                        <li>
                             <Link to="/mode-selection"><strong>START</strong></Link>
                         </li>
                     </ul>
                 </nav>
                 <div className="content">
                     <Routes>
-                        <Route
-                            path="/"
-                            element={<SettingsPage setInterval={setInterval}/>}
-                        />
+                        <Route path="/" element={<SettingsPage setInterval={setInterval} />} />
                         <Route
                             path="/display"
                             element={
