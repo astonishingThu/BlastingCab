@@ -4,14 +4,23 @@ import {doc, getDoc, updateDoc} from "firebase/firestore";
 import {firestore} from "./firebase.js";
 import displayWordsPage from "./DisplayWordsPage.jsx";
 
-function WordDisplay({ word, definition, samples, level, onAnswerSubmit, interval, onNextWord, currentWordIndex, totalWords }) {
+function WordDisplay({ word, definition, samples, level, onAnswerSubmit, interval, onNextWord, currentWordIndex, totalWords, displayOrder }) {
   const [showDetails, setShowDetails] = useState(false);
   const [timeLeft, setTimeLeft] = useState(interval); // Use the interval passed as a prop
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   useEffect(() => {
     let timer;
-    if (!showDetails && timeLeft > 0) {
+    if (definition.trim() === '' && samples.length === 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(prevTime => prevTime - 1);
+      }, 1000);
+      if(timeLeft===0) {
+        onNextWord();
+        setTimeLeft(interval);
+      }
+    }
+    else if (!showDetails && timeLeft > 0) {
       timer = setTimeout(() => {
         setTimeLeft(prevTime => prevTime - 1);
       }, 1000);
@@ -23,7 +32,6 @@ function WordDisplay({ word, definition, samples, level, onAnswerSubmit, interva
       if (showDetails) {
         onNextWord(); // Move to the next word
       }
-
       setShowDetails(!showDetails);
       setTimeLeft(interval);
     }
@@ -84,22 +92,17 @@ function WordDisplay({ word, definition, samples, level, onAnswerSubmit, interva
   if (currentWordIndex >= totalWords) {
     return <div className="word-display"><p>All words have been displayed!</p></div>;
   }
-  const radius = 50;
-  const circumference = 2 * Math.PI * radius;
-  const progress = timeLeft / interval;
-  const strokeDashoffset = circumference - progress * circumference;
 
   return (
       <div className="word-display">
         <div className="begin">
-          <h1><strong>{word}</strong></h1>
+          <h1><strong>{displayOrder === "wordFirst" ? word : definition === ""? word:definition}</strong></h1>
         </div>
 
         <div className="end">
           {showDetails && (
               <div className="backCard">
-                <p>{definition}</p>
-                <p>{level}</p>
+                <p>{displayOrder === "wordFirst" ? definition : word}</p>
                 {samples.map((sample, index) => (
                     <p key={index}>{sample}</p>
                 ))}

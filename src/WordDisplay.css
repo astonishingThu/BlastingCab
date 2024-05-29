@@ -82,3 +82,7 @@
 .skipButton:hover, .level-buttons > button:hover {
   background-color: #adadad;
 }
+
+.backCard > p{
+  font-size: 4rem;
+}

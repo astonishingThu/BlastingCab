@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./Settings.css";
 import { firestore } from "./firebase";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion} from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
-function SettingsPage({ setInterval, onModeChange }) {
+function SettingsPage({ setInterval, onModeChange, setDisplayOrder }) {
   const [wordList, setWordList] = useState("");
   const [intervalInput, setIntervalInput] = useState(3);
   const [mode, setMode] = useState("shuffle");
-
+  const [displayOrder, setDisplayOrderState] = useState("wordFirst");
   const handleFileChange = (event) => {
     const file = event.target.files[0]; // Get the first file from the input
     if (!file) return; // Do nothing if no file is selected
@@ -16,7 +16,7 @@ function SettingsPage({ setInterval, onModeChange }) {
     reader.onload = async (e) => {
       const csvText = e.target.result; // Get the CSV text
       const newWords = csvText.split("\n").map((line) => {
-        const [word, definition, samples, level] = line.split(",");
+        const [word='', definition='', samples='', level=''] = line.split(",");
         return { word: word.trim(), definition, samples: samples.split(";").map(sample => sample.trim()), level };
       });
 
@@ -34,9 +34,15 @@ function SettingsPage({ setInterval, onModeChange }) {
         );
 
         if (filteredWords.length > 0) {
-          await updateDoc(docRef, {
-            words: arrayUnion(...filteredWords),
-          });
+          if (docSnap.exists()) {
+            await updateDoc(docRef, {
+              words: arrayUnion(...filteredWords),
+            });
+          } else {
+            await setDoc(docRef, {
+              words: filteredWords,
+            });
+          }
         }
 
         // Clear the file input after import
@@ -51,12 +57,25 @@ function SettingsPage({ setInterval, onModeChange }) {
   };
 
   const handleImport = async () => {
-    const newWords = wordList.split("\n").map((word) => {
-      const [wordStr, definition, samplesStr, level] = word.split(",");
-      const samples = samplesStr.split(";").map((sample) => sample.trim());
-      return { word: wordStr.trim(), definition, samples, level };
+    const newWords = wordList
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0)  // Filter out empty lines
+        .map((word) => {
+          // Split the word into components
+          const [wordStr = '', definition = '', samplesStr = '', level = ''] = word.split(",");
 
-    });
+          // Split samplesStr into an array, or set it to an empty array if it's not provided
+          const samples = samplesStr ? samplesStr.split(";").map((sample) => sample.trim()) : [];
+
+          // Trim and return the word object with default values for missing attributes
+          return {
+            word: wordStr.trim(),
+            definition: definition.trim(),
+            samples,
+            level: level.trim()
+          };
+        });
 
     try {
       const docRef = doc(firestore, "words", "wordList");
@@ -67,15 +86,20 @@ function SettingsPage({ setInterval, onModeChange }) {
         existingWords = docSnap.data().words;
       }
 
-
       const filteredWords = newWords.filter(
           newWord => !existingWords.some(existingWord => existingWord.word === newWord.word)
       );
 
       if (filteredWords.length > 0) {
-        await updateDoc(docRef, {
-          words: arrayUnion(...filteredWords)
-        });
+        if (docSnap.exists()) {
+          await updateDoc(docRef, {
+            words: arrayUnion(...filteredWords),
+          });
+        } else {
+          await setDoc(docRef, {
+            words: filteredWords,
+          });
+        }
       }
 
       setWordList(""); // Clear the textarea after import
@@ -87,10 +111,18 @@ function SettingsPage({ setInterval, onModeChange }) {
   const handleIntervalChange = () => {
     setInterval(intervalInput);
   };
+
   const handleModeChange = (event) => {
     setMode(event.target.value);
     onModeChange(event.target.value);
   };
+
+  const handleDisplayOrderChange = (event) => {
+    const newDisplayOrder = event.target.value;
+    setDisplayOrderState(newDisplayOrder);
+    setDisplayOrder(newDisplayOrder);
+  };
+
   return (
       <div className="settings">
         <label>
@@ -117,8 +149,18 @@ function SettingsPage({ setInterval, onModeChange }) {
           </label>
           <button onClick={handleIntervalChange}>Set Interval</button>
         </div>
+        <div className="display-order-container">
+          <label>
+            Display Order:
+            <select value={displayOrder} onChange={handleDisplayOrderChange}>
+              <option value="wordFirst">Word First</option>
+              <option value="definitionFirst">Definition First</option>
+            </select>
+          </label>
+        </div>
       </div>
   );
 }
+
 
 export default SettingsPage;
